@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     xmlns:tools="http://schemas.android.com/tools"
+     android:layout_height="match_parent"
+     android:layout_width="match_parent"
+     android:background="@color/background"
+     tools:context=".activity.LoginActivity">
+     
+     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
+        
+        <!-- App Logo -->
+        <!-- Modify By - @Superxowner -->
+     <LinearLayout
+        android:id="@+id/katakata"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="30dp"
+        android:orientation="vertical">
+
+     <ImageView
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_launcher" />
+     </LinearLayout>
+
+    <!-- Login Text -->
+    <!-- Modify By - @Superxowner -->
+     <TextView
+        android:id="@+id/loginText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/bold"
+        android:text="Login"
+        android:textColor="@color/white"
+        android:textSize="22sp" />
+
+    <!-- Subtext -->
+    <!-- Modify By - @Superxowner -->
+     <TextView
+        android:id="@+id/subText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/loginText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/calibri"
+        android:text="Enter a valid licence to login."
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+        
+    <!-- EditText with Paste Button -->
+    <!-- Modify By - @Superxowner -->
+     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:radius="20dp"
+        android:background="@drawable/rounded_corner"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+     <EditText
+        android:id="@+id/userkey"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ems="10"
+        android:padding="10dp"
+        android:background="@android:color/transparent"
+        android:hint="Enter Licence"
+        android:inputType="textPassword"
+        android:textColor="@color/white"
+        android:textColorHint="@color/whitegelap"
+        android:fontFamily="@font/calibri"
+        android:textCursorDrawable="@drawable/cursor"
+        android:textSize="14sp" />
+
+     <ImageView
+        android:id="@+id/paste"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:src="@drawable/baseline_content_paste_24"
+        app:tint="@color/white"
+        android:contentDescription="Paste" />   
+     </LinearLayout>
+    
+        <!-- Login Button -->
+     <androidx.cardview.widget.CardView
+        android:id="@+id/login"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="10dp"
+        app:cardBackgroundColor="@color/blue2"
+        app:cardCornerRadius="20dp">
+     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="LOGIN"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:fontFamily="@font/bold" />
+     </androidx.cardview.widget.CardView>
+
+     <ProgressBar
+         android:layout_height="wrap_content"
+         android:layout_width="wrap_content"
+         android:visibility="gone"
+         android:layout_below="@id/userkey"
+         android:indeterminate="true"
+         android:layout_centerHorizontal="true"
+         android:layout_marginTop="20dp"
+         android:id="@+id/progressBar" />
+
+     <TextView
+         android:layout_height="wrap_content"
+         android:layout_width="wrap_content"
+         android:visibility="gone"
+         android:layout_below="@id/progressBar"
+         android:layout_centerHorizontal="true"
+         android:textSize="14sp"
+         android:textColor="@color/primaryText"
+         android:layout_marginTop="10dp"
+         android:id="@+id/prog_text"
+         android:text="(0/100)" />      
+     </LinearLayout>
+
+</RelativeLayout>
