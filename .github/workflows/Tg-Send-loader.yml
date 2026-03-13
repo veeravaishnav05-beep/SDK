@@ -1,0 +1,105 @@
+name: Build and Send APK/AAR to Telegram
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build-and-send:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Accept licenses and install SDK packages
+        run: |
+          yes | sdkmanager --licenses || true
+          sdkmanager \
+            "platform-tools" \
+            "platforms;android-33" \
+            "build-tools;33.0.1" \
+            "ndk;25.1.8937393"
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Build Debug APK
+        run: ./gradlew :app:assembleDebug --no-daemon --stacktrace
+
+      - name: Build Release APK
+        run: ./gradlew :app:assembleRelease --no-daemon --stacktrace
+
+      - name: Build Bcore Debug AAR
+        run: ./gradlew :Bcore:assembleDebug --no-daemon --stacktrace
+
+      - name: Build Bcore Release AAR
+        run: ./gradlew :Bcore:assembleRelease --no-daemon --stacktrace
+
+      - name: Upload all artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-files
+          path: |
+            app/build/outputs/apk/debug/*.apk
+            app/build/outputs/apk/release/*.apk
+            Bcore/build/outputs/aar/*debug.aar
+            Bcore/build/outputs/aar/*release.aar
+
+      - name: Send Bcore Debug AAR to Telegram
+        run: |
+          FILE=$(find Bcore/build/outputs/aar -name "*debug.aar" | head -n 1)
+          if [ -z "$FILE" ]; then
+            echo "Bcore debug AAR not found"
+            exit 1
+          fi
+          curl -F document=@"$FILE" \
+            -F caption="Bcore Debug AAR" \
+            -F chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+            "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument"
+
+      - name: Send Bcore Release AAR to Telegram
+        run: |
+          FILE=$(find Bcore/build/outputs/aar -name "*release.aar" | head -n 1)
+          if [ -z "$FILE" ]; then
+            echo "Bcore release AAR not found"
+            exit 1
+          fi
+          curl -F document=@"$FILE" \
+            -F caption="Bcore Release AAR" \
+            -F chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+            "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument"
+
+      - name: Send Debug APK to Telegram
+        run: |
+          FILE=$(find app/build/outputs/apk/debug -name "*.apk" | head -n 1)
+          if [ -z "$FILE" ]; then
+            echo "Debug APK not found"
+            exit 1
+          fi
+          curl -F document=@"$FILE" \
+            -F caption="App Debug APK" \
+            -F chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+            "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument"
+
+      - name: Send Release APK to Telegram
+        run: |
+          FILE=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
+          if [ -z "$FILE" ]; then
+            echo "Release APK not found"
+            exit 1
+          fi
+          curl -F document=@"$FILE" \
+            -F caption="App Release APK" \
+            -F chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+            "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument"
